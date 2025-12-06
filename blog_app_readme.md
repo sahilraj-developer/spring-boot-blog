@@ -48,23 +48,42 @@ This project is a **Blog application** built with **Spring Boot** and **MongoDB*
 ```
 blog/
 ├── src/main/java/com/blog/blog/
-│   ├── BlogApplication.java            # Main Spring Boot application
-│   ├── model/
-│   │   └── Blog.java                   # MongoDB document entity
-│   ├── repository/
-│   │   └── BlogRepository.java         # MongoDB repository
-│   ├── service/
-│   │   ├── BlogService.java            # Business logic for blogs
-│   │   └── FileStorageService.java     # Logic for file uploads
-│   └── controller/
-│       ├── BlogController.java         # CRUD API endpoints for blogs
-│       └── FileController.java         # API endpoint for file uploads
+│ ├── BlogApplication.java # Main Spring Boot starter
+│ ├── config/
+│ │ └── WebMvcConfig.java # Static resources config for images
+│ │
+│ ├── controller/
+│ │ ├── BlogController.java # Blog CRUD + Pagination + Search
+│ │ ├── CommentController.java # Comment APIs
+│ │ ├── CategoryController.java # Category CRUD APIs
+│ │ └── FileController.java # File upload APIs
+│ │
+│ ├── service/
+│ │ ├── BlogService.java # Blog service logic
+│ │ ├── CommentService.java # Comment service logic
+│ │ ├── CategoryService.java # Category service logic
+│ │ └── FileStorageService.java # Image upload handling
+│ │
+│ ├── repository/
+│ │ ├── BlogRepository.java # Mongo repository
+│ │ ├── CommentRepository.java
+│ │ ├── CategoryRepository.java
+│ │ └── LikeRepository.java
+│ │
+│ └── model/
+│ ├── Blog.java # Blog document model
+│ ├── Category.java
+│ ├── Comment.java
+│ └── Like.java
+│
 ├── src/main/resources/
-│   ├── application.properties          # Configuration file
-│   └── uploads/                        # Folder for uploaded files
+│ ├── application.properties # App configurations
+│ └── uploads/ # Uploaded images stored here
+│
 ├── src/test/java/com/blog/blog/
-│   └── BlogApplicationTests.java       # Test class
-└── pom.xml                             # Maven dependencies and plugins
+│ └── BlogApplicationTests.java # Test cases
+│
+└── pom.xml # Maven dependencies
 ```
 
 **Types of files:**
