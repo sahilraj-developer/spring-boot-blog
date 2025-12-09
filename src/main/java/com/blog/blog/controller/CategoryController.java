@@ -17,32 +17,80 @@ import org.springframework.web.bind.annotation.RestController;
 import com.blog.blog.model.Category;
 import com.blog.blog.service.CategoryService;
 
+/**
+ * CategoryController exposes REST endpoints to manage blog categories.
+ * Supports creating, updating, retrieving, and deleting categories.
+ * Categories help organize blogs by grouping related topics together.
+ */
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin
+@CrossOrigin // Allows CORS support for frontend frameworks (React/Next.js/Vue)
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
-    @PostMapping
-    public ResponseEntity<Category> create(@RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.create(category));
+    /**
+     * Constructor-based dependency injection
+     * Recommended for required dependencies & easier unit testing.
+     */
+    @Autowired
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
+    /**
+     * Create a new category
+     *
+     * Example Request Body:
+     * {
+     *   "name": "Technology",
+     *   "description": "Programming and tech updates"
+     * }
+     *
+     * @param category JSON object mapped to Category model
+     * @return Created category with 200 OK response
+     */
+    @PostMapping
+    public ResponseEntity<Category> create(@RequestBody Category category) {
+        Category createdCategory = categoryService.create(category);
+        return ResponseEntity.ok(createdCategory);
+    }
+
+    /**
+     * Get all categories
+     *
+     * Example:
+     * GET /api/categories
+     *
+     * @return list of categories
+     */
     @GetMapping
     public ResponseEntity<List<Category>> getAll() {
         return ResponseEntity.ok(categoryService.findAll());
     }
 
+    /**
+     * Update an existing category
+     *
+     * @param id Category ID to update
+     * @param category Updated category data
+     * @return Updated data or 404 if category not found
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Category> update(
             @PathVariable String id,
             @RequestBody Category category
     ) {
-        return ResponseEntity.ok(categoryService.update(id, category));
+        Category updatedCategory = categoryService.update(id, category);
+        return ResponseEntity.ok(updatedCategory);
     }
 
+    /**
+     * Delete a category by ID
+     *
+     * @param id Category ID to delete
+     * @return HTTP 204 No Content if successful
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         categoryService.delete(id);

@@ -248,3 +248,79 @@ public class WebMvcConfig implements WebMvcConfigurer {
 - Use `BlogController` for CRUD operations and `FileController` for file uploads.  
 - API can be tested using **Postman** or **Swagger** (optional).
 
+
+
+
+
+
+
+
+
+
+
+
+
+🐳 Docker Setup
+🧱 Build the Docker image
+
+
+
+mvn clean package -DskipTests
+docker build -t spring-boot-blog:latest .
+
+
+
+▶ Run the container
+
+
+docker run -p 8080:8080 spring-boot-blog:latest
+
+
+
+
+
+
+
+Run docker-compose
+
+
+docker-compose build
+docker-compose up -d
+
+
+
+
+
+☸ Kubernetes Deployment
+Apply Kubernetes manifests
+
+
+
+
+
+kubectl apply -f k8s/mongo-pv-pvc.yaml
+kubectl apply -f k8s/mongo-deployment.yaml
+kubectl apply -f k8s/mongo-service.yaml
+kubectl apply -f k8s/configmap.yaml
+kubectl apply -f k8s/app-deployment.yaml
+kubectl apply -f k8s/app-service.yaml
+
+
+
+
+
+Check resources
+
+
+
+kubectl get pods
+kubectl get svc
+kubectl get deployments
+
+
+
+
+Access app via NodePort
+
+
+http://localhost:30080/api/health

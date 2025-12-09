@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo_blog
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: blogdb
+    volumes:
+      - mongo-data:/data/db
+
+  blog-app:
+    build: .
+    container_name: blog_spring_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/blogdb
+      FILE_UPLOAD_DIR: /uploads
+    volumes:
+      - ./uploads:/uploads
+    restart: always
+
+volumes:
+  mongo-data:
