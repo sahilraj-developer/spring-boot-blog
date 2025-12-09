@@ -34,17 +34,24 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Push the image
-      - name: Push Image to Docker Hub
+      # Push the image to Docker Hub
+      - name: Push Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/spring-boot-blog:latest
 
-      # Setup kubectl
+      # Install kubectl
+      - name: Install Kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      # Setup Kubernetes Config
       - name: Set up K8s config
         run: |
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
 
       # Deploy to Kubernetes
-      - name: Apply K8s manifests
+      - name: Deploy to Kubernetes
         run: |
-          kubectl set image deployment/blog-app blog-app=${{ secrets.DOCKER_USERNAME }}/spring-boot-blog:latest
-          kubectl rollout restart deployment blog-app
+          kubectl set image deployment/blog-app blog-app=${{ secrets.DOCKER_USERNAME }}/spring-boot-blog:latest --record
+          kubectl rollout status deployment/blog-app
